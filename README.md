@@ -1,1 +1,3 @@
-# insurance_loss_estimation
+# Insurance loss estimation
+
+Rest API for insurance loss estimation.
