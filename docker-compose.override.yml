@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      target: app_test
+    volumes:
+      - ./app:/usr/src/app
+      - ./tests:/usr/src/tests
+
+  celery:
+    volumes:
+      - ./app:/usr/src/app

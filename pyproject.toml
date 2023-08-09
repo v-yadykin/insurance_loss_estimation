@@ -51,4 +51,4 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 warn_unused_configs = true
 follow_imports = "normal"
-plugins = ["pydantic.mypy"]
+# plugins = ["pydantic.mypy"]

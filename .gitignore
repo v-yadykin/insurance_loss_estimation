@@ -178,3 +178,8 @@ pyrightconfig.json
 
 # Directory for developer's local scripts and other files
 .local_dev/
+
+# Docker compose volumes
+config/
+rabbitmq/
+var/
