@@ -3,7 +3,11 @@ up:
 
 up-test:
 	cp test.env .env
-	docker compose up -d
+	docker compose build
+	docker compose up --force-recreate -d
+
+run-tests:
+	docker compose exec -w /usr/src/tests app pytest -v ../tests
 
 down:
 	docker compose down --remove-orphans

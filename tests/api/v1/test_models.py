@@ -11,14 +11,22 @@ POLLING_INTERVAL = 5
 WAIT_TIME = 60
 
 
+@pytest.fixture
+def anyio_backend():
+    return "asyncio"
+
+
 async def poll_train_job(
     ac: AsyncClient,
     job_id: str,
     polling_interval: int = POLLING_INTERVAL,
     wait_time: int = WAIT_TIME,
 ) -> bool:
+    print(f"job id: {job_id}")
+    print("polling model training status...")
+
     for _ in range(WAIT_TIME // POLLING_INTERVAL):
-        response = await ac.get(f"/api/v1/models/train/status/{job_id}")
+        response = await ac.get(f"/models/train/status/{job_id}")
         assert response.status_code == 200
 
         match response.json()["status"]:
@@ -26,17 +34,19 @@ async def poll_train_job(
                 return True
             case "FAILURE":
                 return False
-            case _:
-                sleep(polling_interval)
+            case status:
+                print(f"job status: {status}, waiting...")
+                await sleep(polling_interval)
 
-    raise AssertionError("Timeout")
+    raise AssertionError("Job timeout")
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_train_model():
-    async with AsyncClient(app=app, base_url=app) as ac:
+    async with AsyncClient(app=app, base_url=BASE_URL) as ac:
+        print("request model training")
         response = await ac.post(
-            "/api/v1/models/train",
+            "/models/train",
             json={
                 "label_column": "expected_loss",
                 "epochs": 10,
